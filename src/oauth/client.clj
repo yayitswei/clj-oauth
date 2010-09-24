@@ -50,22 +50,8 @@
 
 (defn request-token
   "Fetch request token for the consumer."
-  ([consumer]
-     (let [unsigned-params (sig/oauth-params consumer)
-           signature (sig/url-encode (sig/sign consumer
-                                               (sig/base-string "POST" 
-                                                                (:request-uri consumer)
-                                                                unsigned-params)))
-           params (assoc unsigned-params :oauth_signature signature)]
-       (success-content
-        (http/post (:request-uri consumer)
-                   :headers {"Authorization" (authorization-header (assoc params
-                                                                     :oauth_signature signature))}
-                   :parameters (http/map->params {:use-expect-continue false})
-                   :as :urldecoded))))
-  ([consumer callback-uri]
-     (let [unsigned-params (assoc (sig/oauth-params consumer)
-                             :oauth_callback (sig/url-encode callback-uri))
+  ([consumer & optional-params]
+     (let [unsigned-params (merge (sig/oauth-params consumer) (first optional-params))
            signature (sig/url-encode (sig/sign consumer
                                                (sig/base-string "POST" 
                                                                 (:request-uri consumer)
