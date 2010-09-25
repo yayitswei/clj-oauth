@@ -57,7 +57,7 @@ The server support makes it simple to add OAuth support to any [Ring](http://git
                                         (:oauth_token_secret access-token-response)
                                         :POST
                                         "http://twitter.com/statuses/update.json"
-                                        {:status "posting from #clojure with #oauth")))
+                                        {:status "posting from #clojure with #oauth"}))
 
     ;; Post with clj-apache-http...
     (http/post "http://twitter.com/statuses/update.json" 

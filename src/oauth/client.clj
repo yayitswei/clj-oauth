@@ -94,7 +94,6 @@ to approve the Consumer's access to their account."
                                (:oauth_token_secret request-token))
            params (assoc unsigned-params
                     :oauth_signature signature)]
-       (swank.core/break)
        (success-content
         (http/post (:access-uri consumer)
                    :query params
