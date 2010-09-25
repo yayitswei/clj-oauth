@@ -67,13 +67,9 @@
 (defn user-approval-uri
   "Builds the URI to the Service Provider where the User will be prompted
 to approve the Consumer's access to their account."
-  ([consumer token]
+  ([consumer token & optional-params]
      (.toString (http/resolve-uri (:authorize-uri consumer) 
-                                  {:oauth_token token})))
-  ([consumer token callback-uri]
-     (.toString (http/resolve-uri (:authorize-uri consumer) 
-                                  {:oauth_token token
-                                   :oauth_callback callback-uri}))))
+                                  (merge {:oauth_token (:oauth_token token)} (first optional-params))))))
 
 (defn access-token 
   "Exchange a request token for an access token.
@@ -98,10 +94,11 @@ to approve the Consumer's access to their account."
                                (:oauth_token_secret request-token))
            params (assoc unsigned-params
                     :oauth_signature signature)]
+       (swank.core/break)
        (success-content
         (http/post (:access-uri consumer)
                    :query params
-;                   :header {"Authorization" (authorization-header params)}
+                   :header {"Authorization" (authorization-header params)}
                    :parameters (http/map->params {:use-expect-continue false})
                    :as :urldecoded)))))
 
